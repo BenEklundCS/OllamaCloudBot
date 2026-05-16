@@ -26,7 +26,11 @@ async def on_ready():
 async def on_message(message: discord.Message):
     if message.author.bot:
         return
-    if bot.user not in message.mentions:
+
+    bot_mentioned = bot.user in message.mentions or any(
+        r.tags and r.tags.bot_id == bot.user.id for r in message.role_mentions
+    )
+    if not bot_mentioned:
         return
 
     content = message.content
